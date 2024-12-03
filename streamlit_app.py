@@ -1,13 +1,14 @@
 import openai
 import streamlit as st
 
+api_key = st.text_input("OpenAI API Key", type='password')
+
 # Streamlit 페이지 구성
 st.title("AI 기반 면접 준비 코칭 사이트")
 st.header("면접 준비를 AI와 함께!")
 
 # 사용자가 입력한 직업군
 job = st.text_input("원하는 직업을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
-st.text_input(label, type="password")
 
 if job:
     # OpenAI API를 사용하여 자격증 및 면접 팁 가져오기
