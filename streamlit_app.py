@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 
 # OpenAI API 키 설정
-openai.api_key = "YOUR_OPENAI_API_KEY"  # 본인의 OpenAI API 키를 여기에 입력하세요.
+openai.api_key = "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"  # 본인의 OpenAI API 키를 여기에 입력하세요.
 
 # Streamlit 페이지 구성
 st.title("AI 기반 면접 준비 코칭 사이트")
