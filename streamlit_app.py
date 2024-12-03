@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 
 # OpenAI API 키 설정
-openai.api_key = "YOUR_OPENAI_API_KEY"  # 본인의 OpenAI API 키를 입력하세요.
+openai.api_key = "YOUR_OPENAI_API_KEY"  # 자신의 OpenAI API 키를 여기에 입력하세요.
 
 # Streamlit 페이지 구성
 st.title("AI 기반 면접 준비 코칭 사이트")
@@ -15,8 +15,8 @@ if job:
     # OpenAI API를 사용하여 자격증 및 면접 팁 가져오기
     with st.spinner("AI가 정보를 가져오고 있습니다..."):
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4 mini",
+            response = openai.Chat.create(
+                model="gpt-4",
                 messages=[
                     {"role": "system", "content": "당신은 면접 준비 코치입니다."},
                     {"role": "user", "content": f"{job} 직업에 필요한 주요 자격증과 면접 준비 팁을 알려주세요."}
@@ -24,7 +24,7 @@ if job:
             )
 
             # AI의 응답 출력
-            result = response.choices[0].message.content
+            result = response.choices[0].message['content']
             st.success("정보를 성공적으로 가져왔습니다!")
             st.subheader(f"{job} 직업 관련 정보")
             st.text_area("AI가 추천하는 자격증 및 면접 팁", value=result, height=300)
