@@ -1,8 +1,6 @@
 import openai
 import streamlit as st
 
-# OpenAI API 키 설정
-openai.api_key = "sk..."  # 본인의 OpenAI API 키를 여기에 입력하세요.
 st.text_input(label, type="password")
 
 # Streamlit 페이지 구성
