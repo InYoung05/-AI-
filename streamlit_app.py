@@ -15,8 +15,8 @@ if job:
     # OpenAI API를 사용하여 자격증 및 면접 팁 가져오기
     with st.spinner("AI가 정보를 가져오고 있습니다..."):
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
+            response = openai.Chat.create(
+                model="gpt-4 mini",
                 messages=[
                     {"role": "system", "content": "당신은 면접 준비 코치입니다."},
                     {"role": "user", "content": f"{job} 직업에 필요한 주요 자격증과 면접 준비 팁을 알려주세요."}
