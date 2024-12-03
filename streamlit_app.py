@@ -32,9 +32,10 @@ def get_certifications(job_title):
 def main():
     st.title("AI 기반 면접 준비 코칭 사이트")
     
-    # 직업 선택
+    # 직업 선택 입력칸 추가
     job_title = st.text_input("면접을 준비할 직업을 입력하세요 (예: 소프트웨어 개발자, 마케팅 매니저 등):")
     
+    # 입력한 직업이 있으면, 면접 팁과 자격증 정보를 보여줌
     if job_title:
         st.subheader(f"{job_title} 면접 준비 팁")
         interview_tips = get_interview_tips(job_title)
@@ -43,3 +44,5 @@ def main():
         st.subheader(f"{job_title} 관련 자격증 정보")
         certifications = get_certifications(job_title)
         st.write(certifications)
+    else:
+        st.write("직업을 입력해 주세요.")
