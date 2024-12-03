@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 
 # OpenAI API 키 설정
-openai.api_key = "sk-..."  # OpenAI API 키를 입력하세요. (여기에 적지 마세요.)
+openai.api_key = "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"  # OpenAI API 키를 입력하세요. (여기에 적지 마세요.)
 
 # Streamlit 페이지 구성
 st.set_page_config(
