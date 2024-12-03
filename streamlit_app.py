@@ -2,6 +2,7 @@ import openai
 import streamlit as st
 
 api_key = st.text_input("OpenAI API Key", type='password')
+client = OpenAI(api_key=api_key)
 
 # Streamlit 페이지 구성
 st.title("AI 기반 면접 준비 코칭 사이트")
