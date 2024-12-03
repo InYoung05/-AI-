@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 
 # OpenAI API Key 설정
-openai.api_key = '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'
+openai.api_key = "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"
 
 # 면접 팁 요청 함수
 def get_interview_tips(job_title):
