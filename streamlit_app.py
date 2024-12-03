@@ -39,6 +39,3 @@ if job:
 st.sidebar.title("부가 정보")
 st.sidebar.info("자신감 있는 태도, 명확한 의사소통, 관련 프로젝트 경험 공유 등도 중요합니다!")
 st.sidebar.text("📌 팁: 모의 면접을 통해 실전 감각을 익히세요!")
-
-# Streamlit 앱 실행 명령어
-st.write("Streamlit 앱 실행은 터미널에서 `streamlit run [파일명.py]` 명령어를 사용하세요.")
