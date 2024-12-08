@@ -27,7 +27,7 @@ else:
 @st.cache_data
 def get_interview_tips(job_title):
     # OpenAI API 호출
-    return response['choices'][0]['text'].strip()
+    return response['choices'][0]['message']['content']
 
 # 원하는 직업 입력
 job_title = st.text_input("원하는 직업을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
@@ -39,9 +39,9 @@ if st.button("면접 준비 자료 생성"):
     else:
         try:
             with st.spinner("AI가 면접 팁을 준비 중입니다..."):
-                # OpenAI API 호출 (Completion 사용)
-                response = openai.Completion.create(
-                    model="text-davinci-003",  # "gpt-3.5-turbo" 대신 사용 가능한 모델
+                # OpenAI API 호출 (new method)
+                response = openai.completions.create(
+                    model="gpt-4",  # 최신 모델을 사용하세요
                     prompt=f"Provide detailed interview tips and preparation materials for the job of {job_title}.",
                     max_tokens=500,
                     temperature=0.7,
