@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit as st
 from openai import OpenAI
 
 api_key = st.text_input("OpenAI API Key", 
