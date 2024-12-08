@@ -42,13 +42,14 @@ if st.button("면접 준비 자료 생성"):
 
                 # 글자가 초과하는 경우 마지막 문장까지 자르기
                 def truncate_text(text):
-                    # 문장 끝까지 자르기 위해 정규 표현식을 사용
+                    # 숫자와 공백을 포함하여 마지막 문장 잘라내기
                     sentences = text.split('. ')
                     if len(sentences) > 1:
                         return '. '.join(sentences[:-1]) + '.'
                     return text
 
-                tips = truncate_text(tips)
+                # 짤린 부분까지 제거
+                tips = truncate_text(tips).strip()
 
                 st.success("면접 준비 자료가 생성되었습니다!")
                 st.write(f"### {job_title} 직업에 대한 면접 팁")
