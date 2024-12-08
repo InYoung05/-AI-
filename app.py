@@ -40,17 +40,14 @@ if st.button("면접 준비 자료 생성"):
         try:
             with st.spinner("AI가 면접 팁을 준비 중입니다..."):
                 # OpenAI API 호출 (정확한 클래스명과 메서드 호출)
-                response = openai.ChatCompletion.create(
+                response = openai.completions.create(
                     model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
-                        {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."},
-                    ],
+                    prompt=f"Provide detailed interview tips and preparation materials for the job of {job_title}.",
                     max_tokens=500,
                     temperature=0.7,
                 )
                 
-                tips = response['choices'][0]['message']['content']
+                tips = response['choices'][0]['text']
 
                 # 글자가 초과하는 경우 마지막 문장까지 자르기 (숫자와 공백 포함)
                 def truncate_text(text):
