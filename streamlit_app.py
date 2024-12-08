@@ -1,5 +1,7 @@
 import streamlit as st
 import openai
+from openai import OpenAI
+
 
 # Streamlit 페이지 구성
 st.title("AI 기반 면접 코칭 사이트")
