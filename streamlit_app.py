@@ -49,6 +49,8 @@ if st.button("면접 준비 자료 생성"):
                         # 숫자와 공백을 포함하여 끝부분 잘리기
                         if text_to_return[-1].isdigit():
                             text_to_return = '. '.join(sentences[:-2]) + '.'
+                        # 마지막 문장이 숫자일 경우 해당 부분 제거
+                        text_to_return = text_to_return.rstrip('0123456789. ')  # 숫자와 공백 및 점 제거
                         return text_to_return
                     return text
 
