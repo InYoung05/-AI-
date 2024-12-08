@@ -27,7 +27,7 @@ else:
 @st.cache_data
 def get_interview_tips(job_title):
     # OpenAI API 호출
-    return response['choices'][0]['message']['content']
+    return response['choices'][0]['text'].strip()
 
 # 원하는 직업 입력
 job_title = st.text_input("원하는 직업을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
@@ -39,19 +39,15 @@ if st.button("면접 준비 자료 생성"):
     else:
         try:
             with st.spinner("AI가 면접 팁을 준비 중입니다..."):
-                # OpenAI API 호출 (ChatCompletion 사용)
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[{
-                        "role": "system", "content": "You are a professional interview coach. Please respond in Korean."
-                    }, {
-                        "role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."
-                    }],
+                # OpenAI API 호출 (Completion 사용)
+                response = openai.Completion.create(
+                    model="text-davinci-003",  # "gpt-3.5-turbo" 대신 사용 가능한 모델
+                    prompt=f"Provide detailed interview tips and preparation materials for the job of {job_title}.",
                     max_tokens=500,
                     temperature=0.7,
                 )
                 
-                tips = response['choices'][0]['message']['content']
+                tips = response['choices'][0]['text'].strip()
 
                 # 글자가 초과하는 경우 마지막 문장까지 자르기 (숫자와 공백 포함)
                 def truncate_text(text):
