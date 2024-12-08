@@ -27,13 +27,14 @@ def get_interview_tips(job_title):
     if 'openai_client' in st.session_state:
         openai_client = st.session_state['openai_client']
         
-        # API 호출 방식 변경 (1.0.0 이상에 맞게 수정)
+        # OpenAI 1.0.0 이상에 맞는 새로운 방식으로 API 호출
         response = openai_client.Completion.create(
-            model="text-davinci-003",  # 모델을 선택하여 명시적으로 지정
+            model="text-davinci-003",  # 모델을 명시적으로 지정
             prompt=f"Please provide detailed interview tips and preparation materials for the job of {job_title}.",
             max_tokens=500,
             temperature=0.7
         )
+        
         return response['choices'][0]['text'].strip()
     else:
         return "OpenAI 클라이언트가 초기화되지 않았습니다."
