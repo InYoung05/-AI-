@@ -5,11 +5,6 @@ import openai
 st.title("AI 기반 면접 코칭 사이트")
 st.write("OpenAI API를 활용해 원하는 직업에 맞는 면접 팁과 정보를 제공합니다.")
 
-# OpenAI API Key 입력
-api_key = st.text_input("OpenAI API Key", 
-                        value=st.session_state.get('api_key', ''), 
-                        type='password')
-
 # API Key 확인 후 세션 상태에 저장
 if api_key:
     st.session_state['api_key'] = api_key
