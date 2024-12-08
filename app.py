@@ -27,14 +27,17 @@ def get_interview_tips(job_title):
     if 'openai_client' in st.session_state:
         openai_client = st.session_state['openai_client']
         
-        # 최신 방식으로 API 호출 (openai.completions.create 사용)
-        response = openai_client.completions.create(  # `completions.create` 사용
+        # `ChatCompletion.create` 방식으로 호출
+        response = openai_client.ChatCompletion.create(  # `ChatCompletion.create` 사용
             model="gpt-3.5-turbo",  # 최신 모델 사용
-            prompt=f"Provide detailed interview tips and preparation materials for the job of {job_title}.",  # 프롬프트
+            messages=[  # 메시지 형식으로 시스템 및 사용자 입력 설정
+                {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
+                {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."}
+            ],
             max_tokens=500,
             temperature=0.7,
         )
-        return response['choices'][0]['text'].strip()  # 응답에서 텍스트만 추출
+        return response['choices'][0]['message']['content'].strip()  # 응답에서 텍스트만 추출
     else:
         return "OpenAI 클라이언트가 초기화되지 않았습니다."
 
