@@ -13,16 +13,13 @@ api_key = st.text_input("OpenAI API Key",
 # 원하는 직업 입력
 job_title = st.text_input("원하는 직업을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
 
-# API Key 확인
-if not api_key:
-    st.warning("OpenAI API 키를 입력하세요.")
-else:
-    openai.api_key = api_key
-
-@st.cache_data
-def get_interview_tips(job_title):
-    # OpenAI API 호출
-    return response['choices'][0]['message']['content']
+if api_key:
+    st.session_state['api_key'] = api_key
+    if 'openai_client' in st.session_state:
+        client = st.session_state['openai_client']
+    else:
+        client = OpenAI(api_key=api_key)
+        st.session_state['openai_client'] = client
 
 # OpenAI API를 통해 면접 정보 생성
 if st.button("면접 준비 자료 생성"):
