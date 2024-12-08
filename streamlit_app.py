@@ -17,6 +17,11 @@ if not api_key:
 else:
     openai.api_key = api_key
 
+@st.cache_data
+def get_interview_tips(job_title):
+    # OpenAI API 호출
+    return response['choices'][0]['message']['content']
+
 # OpenAI API를 통해 면접 정보 생성
 if st.button("면접 준비 자료 생성"):
     if not job_title:
