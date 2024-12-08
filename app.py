@@ -5,7 +5,17 @@ import openai
 st.title("AI 기반 면접 코칭 사이트")
 st.write("OpenAI API를 활용해 원하는 직업에 맞는 면접 팁과 정보를 제공합니다.")
 
-# OpenAI API Key 입력
+# URL Query Parameter에서 API Key 가져오기
+query_params = st.experimental_get_query_params()
+api_key = query_params.get('api_key', [None])[0]
+
+if api_key:
+    openai.api_key = api_key
+    st.success("API 키를 성공적으로 불러왔습니다!")
+else:
+    st.error("API 키가 없습니다. 첫 페이지에서 입력해 주세요.")
+  
+# key 가져오면 없앨 OpenAI API Key 입력
 api_key = st.text_input("OpenAI API Key", 
                         value=st.session_state.get('api_key', ''), 
                         type='password')
