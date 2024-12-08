@@ -29,25 +29,30 @@ if st.button("면접 준비 자료 생성"):
     else:
         try:
             with st.spinner("AI가 면접 팁을 준비 중입니다..."):
-                response = openai.ChatCompletion.create(  # 최신 API 방식으로 수정
+                response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": "당신은 면접 코치입니다. 면접을 준비하는 데 필요한 상세한 자료와 팁을 제공합니다."},
-                        {"role": "user", "content": f"{job_title} 직업에 대한 면접 준비 자료와 팁을 자세히 제공해주세요."},
-                    ],
-                    max_tokens=1000,  # 토큰 수를 늘려서 긴 응답을 받음
+                    messages=[{"role": "system", "content": "You are a professional interview coach."},
+                              {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."}],
+                    max_tokens=500,
                     temperature=0.7,
                 )
-                # 응답을 여러 번에 걸쳐 출력
                 tips = response['choices'][0]['message']['content']
+
+                # 글자가 초과하는 경우 마지막 문장까지 자르기
+                def truncate_text(text):
+                    # 문장 끝까지 자르기 위해 정규 표현식을 사용
+                    sentences = text.split('. ')
+                    if len(sentences) > 1:
+                        return '. '.join(sentences[:-1]) + '.'
+                    return text
+
+                tips = truncate_text(tips)
+
                 st.success("면접 준비 자료가 생성되었습니다!")
                 st.write(f"### {job_title} 직업에 대한 면접 팁")
-                
-                # 출력 도중에 끊기지 않도록 실시간으로 데이터를 보여주기
-                for tip in tips.split('\n'):
-                    st.write(tip)  # 각 줄을 한 번에 출력
-                
-        except openai.OpenAIError as e:  # 최신 오류 처리 방식
+                st.write(tips)
+
+        except openai.OpenAIError as e:
             st.error(f"OpenAI API 오류가 발생했습니다: {str(e)}")
         except Exception as e:
             st.error(f"오류가 발생했습니다: {str(e)}")
