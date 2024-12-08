@@ -27,17 +27,20 @@ def get_interview_tips(job_title):
     if 'openai_client' in st.session_state:
         openai_client = st.session_state['openai_client']
         
-        # 최신 방식으로 API 호출 (openai.chat.completions.create 사용)
-        response = openai_client.chat_completions.create(  # `chat_completions.create`로 변경
-            model="gpt-3.5-turbo",  # 최신 모델 사용
-            messages=[ 
-                {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
-                {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."}
-            ],
-            max_tokens=500,
-            temperature=0.7,
-        )
-        return response['choices'][0]['message']['content'].strip()  # 응답에서 텍스트만 추출
+        # 최신 방식으로 API 호출 (openai.ChatCompletion 사용)
+        try:
+            response = openai_client.ChatCompletion.create(  # `ChatCompletion.create` 사용
+                model="gpt-3.5-turbo",  # 최신 모델 사용
+                messages=[ 
+                    {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
+                    {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."}
+                ],
+                max_tokens=500,
+                temperature=0.7,
+            )
+            return response['choices'][0]['message']['content'].strip()  # 응답에서 텍스트만 추출
+        except AttributeError:
+            return "API 호출에 오류가 발생했습니다. 라이브러리 버전을 확인해주세요."
     else:
         return "OpenAI 클라이언트가 초기화되지 않았습니다."
 
