@@ -38,6 +38,6 @@ if st.button("면접 준비 자료 생성"):
                 st.write(f"### {job_title} 직업에 대한 면접 팁")
                 st.write(tips)
         except openai.error.OpenAIError as e:  # 모든 OpenAI 오류를 처리
-            st.error(f"OpenAI API 오류: {str(e)}")
+            st.error(f"OpenAI API 오류가 발생했습니다: {str(e)}")
         except Exception as e:  # 기타 오류를 처리
             st.error(f"오류가 발생했습니다: {str(e)}")
