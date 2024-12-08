@@ -30,9 +30,9 @@ if api_key:
 job_title = st.text_input("원하는 직업을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
 
 @st.cache_data
-def get_interview_tips(client, job_title):
+def get_interview_tips(_client, job_title):
     # OpenAI API 호출
-    response = client.chat_completion(
+    response = _client.chat_completion(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
