@@ -39,8 +39,8 @@ if st.button("면접 준비 자료 생성"):
     else:
         try:
             with st.spinner("AI가 면접 팁을 준비 중입니다..."):
-                # 최신 OpenAI API 호출
-                response = openai.completions.create_v2(
+                # OpenAI API 호출 (completions 엔드포인트 사용)
+                response = openai.completions.create(
                     model="gpt-4",  # 최신 모델을 사용하세요
                     prompt=f"Provide detailed interview tips and preparation materials for the job of {job_title}.",
                     max_tokens=500,
