@@ -7,14 +7,14 @@ st.write("OpenAI API를 활용해 원하는 직업에 맞는 면접 팁과 정�
 
 # OpenAI API Key 입력
 api_key = st.text_input("OpenAI API Key", 
-                        value=st.session_state.get('api_key', ''),
+                        value=st.session_state.get('api_key', ''), 
                         type='password')
 
 # API Key 확인 후 세션 상태에 저장
 if api_key:
     st.session_state['api_key'] = api_key
     if 'openai_client' not in st.session_state:
-        openai.api_key = api_key
+        openai.api_key = api_key  # API 키 설정
         st.session_state['openai_client'] = openai  # OpenAI 클라이언트 세션에 저장
 
 # 원하는 직업 입력
@@ -27,15 +27,16 @@ def get_interview_tips(job_title):
     if 'openai_client' in st.session_state:
         openai_client = st.session_state['openai_client']
         
-        # OpenAI 1.0.0 이상에 맞는 새로운 방식으로 API 호출
-        response = openai_client.Completion.create(
-            model="text-davinci-003",  # 모델을 명시적으로 지정
-            prompt=f"Please provide detailed interview tips and preparation materials for the job of {job_title}.",
+        response = openai.ChatCompletion.create(  # ChatCompletion으로 변경
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
+                {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."},
+            ],
             max_tokens=500,
-            temperature=0.7
+            temperature=0.7,
         )
-        
-        return response['choices'][0]['text'].strip()
+        return response['choices'][0]['message']['content'].strip()
     else:
         return "OpenAI 클라이언트가 초기화되지 않았습니다."
 
