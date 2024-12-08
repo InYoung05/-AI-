@@ -16,6 +16,9 @@ if api_key:
     if 'openai_client' not in st.session_state:
         openai.api_key = api_key  # API 키 설정
         st.session_state['openai_client'] = openai  # OpenAI 클라이언트 세션에 저장
+    else:
+        client = OpenAI(api_key=api_key)
+        st.session_state['openai_client'] = client
 
 # 원하는 직업 입력
 job_title = st.text_input("원하는 직업을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
