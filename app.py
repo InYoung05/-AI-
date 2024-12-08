@@ -1,15 +1,14 @@
 import streamlit as st
 import openai
-import asyncio
 
-# OpenAI 클래스
+# OpenAI 클래스를 정의
 class OpenAI:
     def __init__(self, api_key):
         self.api_key = api_key
         openai.api_key = api_key
 
-    async def chat_completion(self, **kwargs):
-        return await openai.ChatCompletion.acreate(**kwargs)
+    def chat_completion(self, **kwargs):
+        return openai.ChatCompletion.create(**kwargs)
 
 # Streamlit 페이지 구성
 st.title("AI 기반 면접 코칭 사이트")
@@ -31,19 +30,15 @@ job_title = st.text_input("원하는 직업을 입력하세요 (예: 데이터 �
 
 @st.cache_data
 def get_interview_tips(_client, job_title):
-    # 비동기 함수 호출
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    response = loop.run_until_complete(
-        _client.chat_completion(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
-                {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."},
-            ],
-            max_tokens=500,
-            temperature=0.7,
-        )
+    # OpenAI API 호출
+    response = _client.chat_completion(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
+            {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."},
+        ],
+        max_tokens=500,
+        temperature=0.7,
     )
     return response['choices'][0]['message']['content']
 
