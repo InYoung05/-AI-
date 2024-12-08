@@ -29,13 +29,16 @@ if st.button("면접 준비 자료 생성"):
     else:
         try:
             with st.spinner("AI가 면접 팁을 준비 중입니다..."):
-                response = openai.Completion.create(  # 최신 API 방식으로 수정
+                response = openai.ChatCompletion.create(  # 최신 API 방식으로 수정
                     model="gpt-3.5-turbo",
-                    prompt=f"Provide detailed interview tips and preparation materials for the job of {job_title}.",
+                    messages=[
+                        {"role": "system", "content": "You are a professional interview coach."},
+                        {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."},
+                    ],
                     max_tokens=500,
                     temperature=0.7,
                 )
-                tips = response['choices'][0]['text']
+                tips = response['choices'][0]['message']['content']
                 st.success("면접 준비 자료가 생성되었습니다!")
                 st.write(f"### {job_title} 직업에 대한 면접 팁")
                 st.write(tips)
