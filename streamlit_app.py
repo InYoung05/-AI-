@@ -1,25 +1,23 @@
 import streamlit as st
-import openai  # OpenAI 라이브러리 임포트
+from openai import OpenAI
 
-# Streamlit 페이지 구성
-st.title("AI 기반 면접 코칭 사이트")
-st.write("OpenAI API를 활용해 원하는 직업에 맞는 면접 팁과 정보를 제공합니다.")
-
-# OpenAI API Key 입력
 api_key = st.text_input("OpenAI API Key", 
                         value=st.session_state.get('api_key',''),
                         type='password')
-
-# 원하는 직업 입력
-job_title = st.text_input("원하는 직업을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
 
 if api_key:
     st.session_state['api_key'] = api_key
     if 'openai_client' in st.session_state:
         client = st.session_state['openai_client']
     else:
-        client = openai
+        client = OpenAI(api_key=api_key)
         st.session_state['openai_client'] = client
+# Streamlit 페이지 구성
+st.title("AI 기반 면접 코칭 사이트")
+st.write("OpenAI API를 활용해 원하는 직업에 맞는 면접 팁과 정보를 제공합니다.")
+
+# 원하는 직업 입력
+job_title = st.text_input("원하는 직업을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
 
 # OpenAI API를 통해 면접 정보 생성
 if st.button("면접 준비 자료 생성"):
