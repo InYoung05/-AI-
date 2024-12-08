@@ -1,6 +1,5 @@
 import streamlit as st
-from openai import OpenAI
-
+import openai  # OpenAI 라이브러리 임포트
 
 # Streamlit 페이지 구성
 st.title("AI 기반 면접 코칭 사이트")
@@ -19,7 +18,7 @@ if api_key:
     if 'openai_client' in st.session_state:
         client = st.session_state['openai_client']
     else:
-        client = OpenAI(api_key=api_key)
+        client = openai
         st.session_state['openai_client'] = client
 
 # OpenAI API를 통해 면접 정보 생성
@@ -31,7 +30,7 @@ if st.button("면접 준비 자료 생성"):
             with st.spinner("AI가 면접 팁을 준비 중입니다..."):
                 response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
-                    messages=[
+                    messages=[ 
                         {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
                         {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."},
                     ],
@@ -42,14 +41,11 @@ if st.button("면접 준비 자료 생성"):
 
                 # 글자가 초과하는 경우 마지막 문장까지 자르기 (숫자와 공백 포함)
                 def truncate_text(text):
-                    # 숫자와 공백을 포함하여 마지막 문장 잘라내기
                     sentences = text.split('. ')
                     if len(sentences) > 1:
                         text_to_return = '. '.join(sentences[:-1]) + '.'  # 마지막 문장 제외
-                        # 숫자와 공백을 포함하여 끝부분 잘리기
                         if text_to_return[-1].isdigit():
-                            text_to_return = '. '.join(sentences[:-2]) + '.'
-                        # 마지막 문장이 숫자일 경우 해당 부분 제거
+                            text_to_return = '. '.join(sentences[:-2]) + '.'  # 마지막 숫자 제거
                         text_to_return = text_to_return.rstrip('0123456789. ')  # 숫자와 공백 및 점 제거
                         return text_to_return
                     return text
