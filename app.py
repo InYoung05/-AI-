@@ -4,6 +4,7 @@ import openai
 # OpenAI 클래스를 정의하여 기존 코드를 수정하지 않고 사용
 class OpenAI:
     def __init__(self, api_key):
+        self.api_key = api_key
         openai.api_key = api_key
 
     def chat_completion(self, **kwargs):
