@@ -2,6 +2,7 @@ import openai
 import streamlit as st
 from openai import OpenAI
 
+# API key 입력
 api_key = st.text_input("OpenAI API Key", 
                         value=st.session_state.get('api_key',''),
                         type='password')
