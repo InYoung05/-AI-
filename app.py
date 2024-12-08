@@ -39,8 +39,8 @@ if st.button("면접 준비 자료 생성"):
     else:
         try:
             with st.spinner("AI가 면접 팁을 준비 중입니다..."):
-                # OpenAI API 호출 (ChatCompletion 사용)
-                response = openai.chat_completions.create(
+                # OpenAI API 호출 (정확한 클래스명과 메서드 호출)
+                response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
                     messages=[
                         {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
