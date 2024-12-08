@@ -27,7 +27,7 @@ def get_interview_tips(job_title):
     if 'openai_client' in st.session_state:
         openai_client = st.session_state['openai_client']
         
-        response = openai_client.chat_completions.create(  # chat/completions로 수정
+        response = openai.ChatCompletion.create(  # ChatCompletion.create로 수정
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a professional interview coach. Please respond in Korean."},
