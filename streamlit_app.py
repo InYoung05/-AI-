@@ -32,8 +32,8 @@ if st.button("면접 준비 자료 생성"):
                 response = openai.ChatCompletion.create(  # 최신 API 방식으로 수정
                     model="gpt-3.5-turbo",
                     messages=[
-                        {"role": "system", "content": "You are a professional interview coach."},
-                        {"role": "user", "content": f"Provide detailed interview tips and preparation materials for the job of {job_title}."},
+                        {"role": "system", "content": "당신은 면접 코치입니다. 면접을 준비하는 데 필요한 상세한 자료와 팁을 제공합니다."},
+                        {"role": "user", "content": f"{job_title} 직업에 대한 면접 준비 자료와 팁을 자세히 제공해주세요."},
                     ],
                     max_tokens=500,
                     temperature=0.7,
