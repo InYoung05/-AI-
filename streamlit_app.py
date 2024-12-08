@@ -35,13 +35,18 @@ if st.button("면접 준비 자료 생성"):
                         {"role": "system", "content": "당신은 면접 코치입니다. 면접을 준비하는 데 필요한 상세한 자료와 팁을 제공합니다."},
                         {"role": "user", "content": f"{job_title} 직업에 대한 면접 준비 자료와 팁을 자세히 제공해주세요."},
                     ],
-                    max_tokens=500,
+                    max_tokens=1000,  # 토큰 수를 늘려서 긴 응답을 받음
                     temperature=0.7,
                 )
+                # 응답을 여러 번에 걸쳐 출력
                 tips = response['choices'][0]['message']['content']
                 st.success("면접 준비 자료가 생성되었습니다!")
                 st.write(f"### {job_title} 직업에 대한 면접 팁")
-                st.write(tips)
+                
+                # 출력 도중에 끊기지 않도록 실시간으로 데이터를 보여주기
+                for tip in tips.split('\n'):
+                    st.write(tip)  # 각 줄을 한 번에 출력
+                
         except openai.OpenAIError as e:  # 최신 오류 처리 방식
             st.error(f"OpenAI API 오류가 발생했습니다: {str(e)}")
         except Exception as e:
