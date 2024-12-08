@@ -37,7 +37,7 @@ if st.button("면접 준비 자료 생성"):
                 st.success("면접 준비 자료가 생성되었습니다!")
                 st.write(f"### {job_title} 직업에 대한 면접 팁")
                 st.write(tips)
-        except openai.error.AuthenticationError:
-            st.error("API 키가 올바르지 않습니다. 다시 확인해주세요.")
-        except Exception as e:
-            st.error(f"오류가 발생했습니다: {e}")
+        except openai.error.OpenAIError as e:  # 모든 OpenAI 오류를 처리
+            st.error(f"OpenAI API 오류: {str(e)}")
+        except Exception as e:  # 기타 오류를 처리
+            st.error(f"오류가 발생했습니다: {str(e)}")
