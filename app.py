@@ -69,7 +69,15 @@ def generate_tips_with_interview(job_title, interview_content=None):
         # 문장이 중간에 끊기지 않도록 처리
         if not content.endswith(("다.", "요.", "습니다.", "습니까?", "에요.")):
             content = content.rsplit('.', 1)[0] + '.'
-        return content
+        
+        # 마지막 항목이 완전하게 마무리된 형태로 만들기
+        if content.endswith(('.', '요.', '습니다.', '에요.')):
+            return content
+        else:
+            content = content.rstrip()
+            if content:
+                content += '.'
+            return content
     except OpenAIError as e:
         return f"OpenAI API 오류 발생: {e}"
 
