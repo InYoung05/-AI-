@@ -62,7 +62,7 @@ def generate_tips_with_interview(job_title, interview_content=None):
         ]
     
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages,
             max_tokens=1000,
