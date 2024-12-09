@@ -2,6 +2,7 @@ import streamlit as st
 import openai
 from openai import OpenAIError
 import os
+import logging
 
 # Streamlit 기본 설정
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
@@ -30,6 +31,9 @@ else:
 
 # OpenAI Client 객체 초기화
 client = openai.Client(api_key=st.session_state["api_key"])  # OpenAI API key를 client 객체에 전달
+
+# OpenAI의 로깅을 비활성화
+logging.getLogger("openai").setLevel(logging.ERROR)
 
 # 면접 준비 팁 생성 함수
 @st.cache_data
@@ -64,14 +68,14 @@ def generate_tips_with_interview(job_title, interview_content=None):
         ]
     
     try:
-        # client 객체를 통해 최신 방식으로 호출
-        response = client.chat.completions.create(
+        # client 객체를 사용해 OpenAI API 호출
+        response = client.completions.create(
             model="gpt-3.5-turbo",  # 원하는 모델명을 입력
             messages=messages,
             max_tokens=1000,
             temperature=0.7
         )
-        content = response.choices[0].message.content  # message에서 content 직접 접근
+        content = response.choices[0].message['content']  # message에서 content 직접 접근
 
         # 문장이 중간에 끊기지 않도록 처리
         if not content.endswith(("다.", "요.", "습니다.", "습니까?", "에요.")):
