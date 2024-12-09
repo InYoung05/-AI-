@@ -2,13 +2,12 @@ import streamlit as st
 import openai
 from openai import OpenAIError
 import os
-import logging
 
 # Streamlit 기본 설정
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 st.title("💼 면접 준비 팁 제공")
 
-# OpenAI API Key 가져오기
+# OpenAI API Key 가져오면 없앨 입력 코드
 api_key = st.text_input("OpenAI API Key", type="password", value=st.session_state.get("api_key", ""))
 if api_key:
     st.session_state["api_key"] = api_key
@@ -31,9 +30,6 @@ else:
 
 # OpenAI Client 객체 초기화
 client = openai.Client(api_key=st.session_state["api_key"])  # OpenAI API key를 client 객체에 전달
-
-# OpenAI의 로깅을 비활성화
-logging.getLogger("openai").setLevel(logging.ERROR)
 
 # 면접 준비 팁 생성 함수
 @st.cache_data
@@ -68,14 +64,14 @@ def generate_tips_with_interview(job_title, interview_content=None):
         ]
     
     try:
-        # client 객체를 사용해 OpenAI API 호출
-        response = client.completions.create(
+        # client 객체를 통해 최신 방식으로 호출
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",  # 원하는 모델명을 입력
             messages=messages,
             max_tokens=1000,
             temperature=0.7
         )
-        content = response.choices[0].message['content']  # message에서 content 직접 접근
+        content = response.choices[0].message.content  # message에서 content 직접 접근
 
         # 문장이 중간에 끊기지 않도록 처리
         if not content.endswith(("다.", "요.", "습니다.", "습니까?", "에요.")):
@@ -92,6 +88,7 @@ def generate_tips_with_interview(job_title, interview_content=None):
     except OpenAIError as e:
         return f"OpenAI API 오류 발생: {e}"
 
+# 직업명 입력과 팁 생성
 st.write("### 면접 준비 팁 생성")
 job_title = st.text_input("직업명을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
 
@@ -105,5 +102,5 @@ if st.button("면접 준비 팁 생성"):
     else:
         with st.spinner("면접 준비 팁을 생성 중입니다..."):
             tips = generate_tips_with_interview(job_title, interview_content)
-            st.success(f'"{job_title}" 직업에 대한 면접 준비 팁이 생성되었습니다!')
-            st.write(tips)
+        st.success(f'"{job_title}" 직업에 대한 면접 준비 팁이 생성되었습니다!')
+        st.write(tips)
