@@ -89,11 +89,24 @@ interview_content = "\n".join(
     [f"{msg['role']}: {msg['content']}" for msg in st.session_state["interview_messages"]]
 ) if "interview_messages" in st.session_state else None
 
+# 면접 준비 팁을 저장할 리스트
+if "generated_tips" not in st.session_state:
+    st.session_state["generated_tips"] = []
+
 if st.button("면접 준비 팁 생성"):
     if not job_title:
         st.warning("직업명을 입력해주세요.")
     else:
         with st.spinner("면접 준비 팁을 생성 중입니다..."):
             tips = generate_tips_with_interview(job_title, interview_content)
+            # 생성된 팁을 리스트에 추가
+            st.session_state["generated_tips"].append(tips)
+
         st.success(f'"{job_title}" 직업에 대한 면접 준비 팁이 생성되었습니다!')
-        st.write(tips)
+
+# 생성된 팁 모두 표시
+if st.session_state["generated_tips"]:
+    st.write("### 생성된 면접 준비 팁들")
+    for idx, tip in enumerate(st.session_state["generated_tips"], 1):
+        st.write(f"**팁 {idx}:**")
+        st.write(tip)
