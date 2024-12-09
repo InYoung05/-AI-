@@ -10,7 +10,6 @@ st.title("💼 면접 준비 팁 제공")
 # OpenAI API Key 가져오기
 api_key = st.text_input("OpenAI API Key", type="password", value=st.session_state.get("api_key", ""))
 if api_key:
-    openai.api_key = api_key  # API 키를 openai 모듈에 직접 설정
     st.session_state["api_key"] = api_key
 else:
     st.warning("OpenAI API Key를 입력하세요.")
@@ -28,6 +27,9 @@ if os.path.exists(interview_file_path):
     st.write(interview_content)
 else:
     st.warning("면접 기록이 없습니다. 먼저 모의 면접을 진행해주세요.")
+
+# OpenAI Client 객체 초기화
+client = openai.Client(api_key=st.session_state["api_key"])  # OpenAI API key를 client 객체에 전달
 
 # 면접 준비 팁 생성 함수
 @st.cache_data
@@ -62,9 +64,9 @@ def generate_tips_with_interview(job_title, interview_content=None):
         ]
     
     try:
-        # 최신 openai API 호출 방식 사용
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # 또는 원하는 모델명
+        # client 객체를 통해 최신 방식으로 호출
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",  # 원하는 모델명을 입력
             messages=messages,
             max_tokens=1000,
             temperature=0.7
