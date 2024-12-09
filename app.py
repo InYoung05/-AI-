@@ -3,6 +3,9 @@ import openai
 from openai import OpenAIError
 import os
 
+# OpenAI client 객체 초기화
+client = openai.Client()
+
 # Streamlit 기본 설정
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 st.title("💼 면접 준비 팁 제공")
@@ -10,7 +13,7 @@ st.title("💼 면접 준비 팁 제공")
 # OpenAI API Key 가져오기
 api_key = st.text_input("OpenAI API Key", type="password", value=st.session_state.get("api_key", ""))
 if api_key:
-    openai.api_key = api_key
+    client.api_key = api_key  # client에 API key 설정
     st.session_state["api_key"] = api_key
 else:
     st.warning("OpenAI API Key를 입력하세요.")
@@ -62,7 +65,8 @@ def generate_tips_with_interview(job_title, interview_content=None):
         ]
     
     try:
-        response = client.chat.completions.create(
+        # client 객체를 사용하여 API 호출
+        response = client.chat_completions.create(
             model="gpt-3.5-turbo",
             messages=messages,
             max_tokens=1000,
