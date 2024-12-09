@@ -100,6 +100,7 @@ if st.button("면접 준비 팁 생성"):
     if not job_title:
         st.warning("직업명을 입력해주세요.")
     else:
+        # 하나의 로딩 메시지로 처리
         with st.spinner("면접 준비 팁을 생성 중입니다..."):
             tips = generate_tips_with_interview(job_title, interview_content)
         st.success(f'"{job_title}" 직업에 대한 면접 준비 팁이 생성되었습니다!')
