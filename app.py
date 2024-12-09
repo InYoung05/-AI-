@@ -62,7 +62,7 @@ def generate_tips_with_interview(job_title, interview_content=None):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=messages,
-            max_tokens=500,
+            max_tokens=1000,
             temperature=0.7
         )
         content = response["choices"][0]["message"]["content"]
