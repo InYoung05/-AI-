@@ -1,5 +1,4 @@
 import streamlit as st
-import pages/2_Mock Interview.py
 import openai
 from openai import OpenAIError
 
@@ -16,10 +15,16 @@ else:
     st.warning("OpenAI API Key를 입력하세요.")
     st.stop()
 
-# 면접 기록 불러오기
+# 면접 기록 확인
 if "interview_messages" not in st.session_state or not st.session_state["interview_messages"]:
-    st.warning("면접 기록이 없습니다. 면접 기록을 먼저 생성해주세요.")
+    st.warning("면접 기록이 없습니다. 먼저 모의 면접을 진행해주세요.")
     st.stop()
+
+# 면접 기록 불러오기
+st.write("### 면접 기록")
+for msg in st.session_state["interview_messages"]:
+    role = "👤 사용자" if msg["role"] == "user" else "🤖 면접관"
+    st.write(f"{role}: {msg['content']}")
 
 # 면접 준비 팁 생성 함수
 @st.cache_data
@@ -54,7 +59,7 @@ def generate_tips_with_interview(job_title, interview_content):
     except OpenAIError as e:
         return f"OpenAI API 오류 발생: {e}"
 
-# 면접 기록과 직업명 입력
+# 직업명 입력과 팁 생성
 st.write("### 면접 준비 팁 생성")
 job_title = st.text_input("직업명을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
 interview_content = "\n".join(
