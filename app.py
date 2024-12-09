@@ -1,4 +1,5 @@
 import streamlit as st
+import pages/2_Mock Interview.py
 import openai
 from openai import OpenAIError
 
