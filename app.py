@@ -69,7 +69,7 @@ def generate_tips_with_interview(job_title, interview_content=None):
         # 문장이 중간에 끊기지 않도록 처리
         if not content.endswith(("다.", "요.", "습니다.", "습니까?", "에요.")):
             content = content.rsplit('.', 1)[0] + '.'
-        
+
         # 마지막 항목이 완전하게 마무리된 형태로 만들기
         if content.endswith(('.', '요.', '습니다.', '에요.')):
             return content
@@ -89,24 +89,25 @@ interview_content = "\n".join(
     [f"{msg['role']}: {msg['content']}" for msg in st.session_state["interview_messages"]]
 ) if "interview_messages" in st.session_state else None
 
-# 면접 준비 팁을 저장할 리스트
+# 기존 생성된 팁을 덮어쓸 변수
 if "generated_tips" not in st.session_state:
-    st.session_state["generated_tips"] = []
+    st.session_state["generated_tips"] = ""
 
+# 면접 준비 팁을 생성하는 버튼
 if st.button("면접 준비 팁 생성"):
     if not job_title:
         st.warning("직업명을 입력해주세요.")
     else:
         with st.spinner("면접 준비 팁을 생성 중입니다..."):
-            tips = generate_tips_with_interview(job_title, interview_content)
-            # 생성된 팁을 리스트에 추가
-            st.session_state["generated_tips"].append(tips)
+            # 면접 기록이 있다면, 그 기록을 기반으로 팁을 생성
+            tips = generate_tips_with_interview(job_title, interview_content) if interview_content else generate_tips_with_interview(job_title)
+
+            # 기존 팁을 덮어쓰기
+            st.session_state["generated_tips"] = tips
 
         st.success(f'"{job_title}" 직업에 대한 면접 준비 팁이 생성되었습니다!')
 
-# 생성된 팁 모두 표시
+# 새로 생성된 팁만 표시
 if st.session_state["generated_tips"]:
-    st.write("### 생성된 면접 준비 팁들")
-    for idx, tip in enumerate(st.session_state["generated_tips"], 1):
-        st.write(f"**팁 {idx}:**")
-        st.write(tip)
+    st.write("### 생성된 면접 준비 팁")
+    st.write(st.session_state["generated_tips"])
