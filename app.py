@@ -18,32 +18,46 @@ else:
 # 면접 기록 확인
 if "interview_messages" not in st.session_state or not st.session_state["interview_messages"]:
     st.warning("면접 기록이 없습니다. 먼저 모의 면접을 진행해주세요.")
-    st.stop()
 
 # 면접 기록 불러오기
-st.write("### 면접 기록")
-for msg in st.session_state["interview_messages"]:
-    role = "👤 사용자" if msg["role"] == "user" else "🤖 면접관"
-    st.write(f"{role}: {msg['content']}")
+if "interview_messages" in st.session_state and st.session_state["interview_messages"]:
+    st.write("### 면접 기록")
+    for msg in st.session_state["interview_messages"]:
+        role = "👤 사용자" if msg["role"] == "user" else "🤖 면접관"
+        st.write(f"{role}: {msg['content']}")
 
 # 면접 준비 팁 생성 함수
 @st.cache_data
-def generate_tips_with_interview(job_title, interview_content):
-    messages = [
-        {"role": "system", "content": "You are an expert interview coach. Please respond in Korean."},
-        {
-            "role": "user",
-            "content": f"""
-            사용자의 면접 기록과 직업명 "{job_title}"을 참고하여 면접 준비 팁을 작성해주세요.
-            면접 기록:
-            {interview_content}
-            
-            작성 항목:
-            1. 면접 기록에 기반한 사용자 피드백
-            2. "{job_title}" 직업에 특화된 맞춤형 면접 준비 팁
-            각각의 항목을 명확히 구분하여 작성해주세요."""
-        }
-    ]
+def generate_tips_with_interview(job_title, interview_content=None):
+    if interview_content:
+        messages = [
+            {"role": "system", "content": "You are an expert interview coach. Please respond in Korean."},
+            {
+                "role": "user",
+                "content": f"""
+                사용자의 면접 기록과 직업명 "{job_title}"을 참고하여 면접 준비 팁을 작성해주세요.
+                면접 기록:
+                {interview_content}
+
+                작성 항목:
+                1. 면접 기록에 기반한 사용자 피드백
+                2. "{job_title}" 직업에 특화된 맞춤형 면접 준비 팁
+                각각의 항목을 명확히 구분하여 작성해주세요."""}
+        ]
+    else:
+        messages = [
+            {"role": "system", "content": "You are an expert interview coach. Please respond in Korean."},
+            {
+                "role": "user",
+                "content": f"""
+                "{job_title}" 직업에 특화된 면접 준비 팁을 작성해주세요.
+                
+                작성 항목:
+                1. "{job_title}" 직업에 맞는 면접 준비 팁
+                """
+            }
+        ]
+    
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -62,9 +76,10 @@ def generate_tips_with_interview(job_title, interview_content):
 # 직업명 입력과 팁 생성
 st.write("### 면접 준비 팁 생성")
 job_title = st.text_input("직업명을 입력하세요 (예: 데이터 분석가, 소프트웨어 엔지니어)")
+
 interview_content = "\n".join(
     [f"{msg['role']}: {msg['content']}" for msg in st.session_state["interview_messages"]]
-)
+) if "interview_messages" in st.session_state else None
 
 if st.button("면접 준비 팁 생성"):
     if not job_title:
