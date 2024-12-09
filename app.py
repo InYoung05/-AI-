@@ -3,8 +3,8 @@ import openai
 from openai import OpenAIError
 import os
 
-# OpenAI client 객체 초기화
-client = openai.Client(api_key=None)
+# OpenAI client 객체 초기화 및 API key 설정
+client = openai.Client(api_key=None)  # API 키를 None으로 시작
 
 # Streamlit 기본 설정
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
@@ -13,7 +13,7 @@ st.title("💼 면접 준비 팁 제공")
 # OpenAI API Key 가져오기
 api_key = st.text_input("OpenAI API Key", type="password", value=st.session_state.get("api_key", ""))
 if api_key:
-    client.api_key = api_key  # client에 API key 설정
+    client.api_key = api_key  # client 객체에 API key 설정
     st.session_state["api_key"] = api_key
 else:
     st.warning("OpenAI API Key를 입력하세요.")
