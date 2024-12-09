@@ -71,7 +71,8 @@ def generate_tips_with_interview(job_title, interview_content=None):
             max_tokens=1000,
             temperature=0.7
         )
-        content = response["choices"][0]["message"]["content"]
+        content = response.choices[0].message["content"]  # 새로운 방식으로 수정
+
         # 문장이 중간에 끊기지 않도록 처리
         if not content.endswith(("다.", "요.", "습니다.", "습니까?", "에요.")):
             content = content.rsplit('.', 1)[0] + '.'
