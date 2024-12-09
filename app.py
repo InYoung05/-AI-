@@ -4,7 +4,7 @@ from openai import OpenAIError
 import os
 
 # OpenAI client 객체 초기화
-client = openai.Client()
+client = openai.Client(api_key=None)
 
 # Streamlit 기본 설정
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
