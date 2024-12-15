@@ -2,12 +2,11 @@ import streamlit as st
 import random
 import time
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyArrow
 
 # 사다리 생성 함수
-def generate_ladder(num_items, num_steps=5):
+def generate_ladder(num_items, num_steps=6):
     """사다리를 생성하고 가로줄 위치를 반환"""
-    ladder = [[False] * (num_steps + 1) for _ in range(num_items)]
+    ladder = [[False] * num_steps for _ in range(num_items)]
     for step in range(num_steps):
         for col in range(num_items - 1):
             if random.choice([True, False]):  # 무작위로 가로줄 생성
@@ -37,7 +36,6 @@ def draw_ladder(ladder, current_position=None):
 
     plt.gca().invert_yaxis()
     plt.axis("off")
-    plt.legend()
     st.pyplot(plt.gcf())
     plt.close()
 
@@ -59,39 +57,46 @@ def run_ladder(ladder, start_col):
             current_col += 1  # 오른쪽 이동
             path.append((current_col, step + 1))
 
-    return path
+    return path, current_col
 
-# Streamlit 인터페이스
+# Streamlit 앱 구성
 st.title("네이버 스타일 사다리타기")
+
+# 사다리 항목 개수 입력
 num_items = st.number_input("항목 개수를 입력하세요 (2~10)", min_value=2, max_value=10, step=1)
 
 if num_items:
-    items = []
     st.subheader("항목 이름 입력")
+    items = []
     for i in range(1, num_items + 1):
         item_name = st.text_input(f"{i}번 항목 이름", key=f"item_{i}")
         if item_name:
             items.append(item_name)
 
     if len(items) == num_items:
-        st.success("모든 항목 이름이 입력되었습니다. 사다리를 생성합니다.")
+        st.success("모든 항목 이름이 입력되었습니다.")
 
-        if st.button("사다리 생성"):
-            # 사다리 생성
-            ladder = generate_ladder(num_items)
-            draw_ladder(ladder)  # 초기 사다리 표시
+        # 결과를 랜덤으로 생성
+        results = random.sample(items, len(items))
 
-            st.info("아래 항목을 클릭하여 사다리타기를 시작하세요!")
-            for idx, item in enumerate(items):
-                if st.button(f"{item} 시작"):
-                    st.write(f"{item}의 사다리타기 진행 중...")
-                    path = run_ladder(ladder, idx)
+        # 사다리 생성
+        ladder = generate_ladder(num_items)
 
-                    # 애니메이션 표시
-                    for position in path:
-                        draw_ladder(ladder, position)
-                        time.sleep(0.5)
+        st.subheader("사다리 생성 완료")
+        draw_ladder(ladder)  # 사다리 시각화
 
-                    # 결과 표시
-                    result = random.choice(items)
-                    st.success(f"결과: {item} → {result}")
+        st.subheader("사다리타기 진행")
+        for idx, item in enumerate(items):
+            col_button = st.button(item, key=f"button_{idx}")
+            if col_button:
+                st.info(f"{item}의 사다리타기 진행 중...")
+                path, end_col = run_ladder(ladder, idx)
+
+                # 애니메이션 효과
+                for position in path:
+                    draw_ladder(ladder, position)
+                    time.sleep(0.5)
+
+                # 결과 표시
+                st.success(f"결과: {item} → {results[end_col]}")
+                break
