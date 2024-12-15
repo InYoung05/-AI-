@@ -1,76 +1,25 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>사다리 타기</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        .input-section {
-            margin: 20px;
-        }
-        .ladder-section {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .ladder-column {
-            margin: 0 10px;
-        }
-        .ladder-result {
-            margin-top: 20px;
-            display: none;
-            background: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
-    <h1>사다리 타기</h1>
-    <div class="input-section">
-        <input type="text" id="item-input" placeholder="항목을 입력하세요">
-        <button onclick="addItem()">추가</button>
-    </div>
-    <div id="item-list"></div>
-    <button onclick="generateLadder()">사다리 생성</button>
-    <div id="ladder" class="ladder-section"></div>
-    <div id="results" class="ladder-result"></div>
+import streamlit as st
+import random
 
-    <script>
-        let items = [];
-        let results = [];
+# 앱 제목
+st.title("사다리 타기")
 
-        function addItem() {
-            const input = document.getElementById('item-input');
-            const value = input.value.trim();
-            if (value) {
-                items.push(value);
-                document.getElementById('item-list').innerText = `항목: ${items.join(", ")}`;
-                input.value = '';
-            }
-        }
+# 항목 입력 섹션
+st.subheader("항목 입력")
+items = st.text_area("각 항목을 줄바꿈으로 입력하세요 (예: 항목1, 항목2, 항목3)").split("\n")
+items = [item.strip() for item in items if item.strip()]  # 빈 값 제거
 
-        function generateLadder() {
-            const ladder = document.getElementById('ladder');
-            ladder.innerHTML = '';
-            results = items.map(() => `결과 ${Math.ceil(Math.random() * 10)}`); // 임시 결과
-            items.forEach((item, index) => {
-                const column = document.createElement('div');
-                column.className = 'ladder-column';
-                column.innerHTML = `<button onclick="showResult(${index})">${item}</button>`;
-                ladder.appendChild(column);
-            });
-        }
+# 결과 자동 생성 버튼
+if st.button("사다리 생성"):
+    if len(items) < 2:
+        st.error("최소 두 개 이상의 항목을 입력해야 합니다!")
+    else:
+        # 사다리 결과 무작위 매칭
+        results = random.sample(items, len(items))
 
-        function showResult(index) {
-            const resultDiv = document.getElementById('results');
-            resultDiv.style.display = 'block';
-            resultDiv.innerText = `${items[index]}의 결과는: ${results[index]}`;
-        }
-    </script>
-</body>
-</html>
+        # 사다리 결과 매칭 표시
+        st.subheader("결과 확인")
+        for i, item in enumerate(items):
+            st.write(f"**{item}** → {results[i]}")
+
+        # 추가로 버튼을 누를 때마다 다른 매칭 결과를 볼 수도 있음
