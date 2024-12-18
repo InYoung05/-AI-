@@ -1,51 +1,29 @@
 import streamlit as st
 import random
-import matplotlib.pyplot as plt
+import time
 
-# set variables
-xset = range(0,360)
-yset = [0,1,2,3,4,5,6]
-result = [0]*8
-gamecount = 0
-gametarget = 0 
+# 참여자와 소지품 입력
+st.title("사다리 타기 이벤트")
+participants = st.text_area("참여자 이름을 입력하세요 (쉼표로 구분)", placeholder="예: 홍길동, 이순신, 강감찬")
+items = st.text_area("소지품을 입력하세요 (쉼표로 구분)", placeholder="예: 숟가락, 젓가락, 컵")
 
-# run game 10000 times
-while(gamecount < 10000):
-        gamecount = gamecount + 1
-        # create a 2D(8*17) list, all set to 0
-        sadari = [[0]*8 for i in xset]
+if st.button("사다리 생성"):
+    # 입력 데이터를 처리
+    names = [name.strip() for name in participants.split(",") if name.strip()]
+    item_list = [item.strip() for item in items.split(",") if item.strip()]
+    
+    if len(names) != len(item_list):
+        st.error("참여자 수와 소지품 수가 같아야 합니다!")
+    else:
+        # 랜덤 매칭 생성
+        random.shuffle(item_list)
+        result = dict(zip(names, item_list))
         
-        # create paths
-        i = 0
-        start = []
-        while(i < len(xset)):
-                x = random.choice(xset)
-                y = random.choice(yset)
-
-                if(sadari[x][y] == 0 and sadari[x][y+1] == 0):
-                        sadari[x][y] = sadari[x][y+1] = 1
-                        start.append([x,y])
-                        i = i + 1
-
-        # start game
-        target = gametarget
-        idx = len(xset)-1
-        while(idx>=0):
-                if(sadari[idx][target] == 0):
-                        idx = idx - 1
-                elif(sadari[idx][target] == 1):
-                        if([idx,target] in start):
-                                target = target + 1
-                                idx = idx - 1
-                        else:
-                                target = target - 1
-                                idx = idx - 1
-        result[target] = result[target]+1
-
-# print game results 
-print(result)
-x = [1,2,3,4,5,6,7,8]
-plt.bar(x,result)
-for a,b in zip(x, result):
-    plt.text(a, b, str(b), ha='center')
-plt.show()
+        # 사다리 표시
+        st.write("### 사다리 생성 중...")
+        time.sleep(1)
+        
+        # 결과 출력
+        for name in names:
+            st.write(f"{name} -> {result[name]}")
+            time.sleep(1)
